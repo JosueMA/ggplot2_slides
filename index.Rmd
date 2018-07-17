@@ -1,5 +1,5 @@
 ---
-title: "Introduction to the Grammar of Graphics with `ggplot2`"
+title: "Introduction to Data Visualisation<br>with `ggplot2`"
 author: "Culture of Insight"
 date: "18/07/2018"
 output:
@@ -80,6 +80,15 @@ class: inverse
 
 .center[
 <img src="assets/rando_party_points.png" width="75%"/>
+]
+
+---
+class: inverse
+
+# Some of our own efforts...
+
+.center[
+<img src="assets/wc_network_cofi.png" width="100%"/>
 ]
 
 ---
