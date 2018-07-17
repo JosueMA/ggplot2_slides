@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to the Grammar of Graphics with ggplot2</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Culture of Insight" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to the Grammar of Graphics with <code>ggplot2</code>
+### Culture of Insight
+### 18/07/2018
+
+---
+
+
+
+
+class: large
+
+# Why ggplot2 for data visualisation?
+
+--
+
+
+- Combine your data wrangling and chart making into one single process
+
+--
+
+  * no more pasting data from excel into powerpoint to make or change a chart! 🙌
+
+--
+
+- Makes it easy to quickly iterate over different ways of mapping your data to shapes, space and colour
+
+--
+
+- Programming a chart with code forces you to think about what you are doing and why
+
+--
+
+- Allows you to create completley unique charts by adding several different 'layers' of data
+
+--
+
+- Not constrained by the chart types available in other software packages
+
+--
+
+- Produce publication quality graphics just like...
+
+---
+class: inverse
+
+# Financial Times
+
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;Fun fact for the &lt;a href="https://twitter.com/hashtag/dataviz?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#dataviz&lt;/a&gt; crowd:&lt;br&gt;&lt;br&gt;This chart (and the ones in the story) are the first we&amp;#39;ve done 100% in ggplot, right down to the custom &lt;a href="https://twitter.com/FT?ref_src=twsrc%5Etfw"&gt;@FT&lt;/a&gt; font and the white bar in the top left. &lt;a href="https://t.co/BVFmoYX2WL"&gt;https://t.co/BVFmoYX2WL&lt;/a&gt;&lt;/p&gt;&amp;mdash; John Burn-Murdoch (@jburnmurdoch) &lt;a href="https://twitter.com/jburnmurdoch/status/1006783615022391297?ref_src=twsrc%5Etfw"&gt;June 13, 2018&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+.center[
+&lt;img src="assets/ft_ggplot.jpg" width="40%"/&gt;
+]
+
+---
+class: inverse
+
+# BBC
+
+&lt;blockquote class="twitter-tweet" data-conversation="none" data-cards="hidden" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;At the beeb we’re now doing a lot of charts solely in ggplot. The charts here for example &lt;a href="https://t.co/bokQHQK6pj"&gt;https://t.co/bokQHQK6pj&lt;/a&gt; .  We’re doing maps too.&lt;/p&gt;&amp;mdash; Wesley Stephenson (@WesStephenson) &lt;a href="https://twitter.com/WesStephenson/status/1006797669648470016?ref_src=twsrc%5Etfw"&gt;June 13, 2018&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+.center[
+&lt;img src="assets/bbc_ggplot.png" width="80%"/&gt;
+]
+
+---
+class: inverse
+
+# Some of our own efforts...
+
+.center[
+&lt;img src="assets/rando_party_points.png" width="75%"/&gt;
+]
+
+---
+class: inverse
+
+# Some of our own efforts...
+
+.center[
+&lt;img src="assets/joyplot.gif" width="90%"/&gt;
+]
+
+---
+
+# Some of our own efforts...
+
+.center[
+&lt;img src="assets/goals.png" width="100%"/&gt;
+]
+
+---
+
+# Some of our own efforts...
+
+.center[
+&lt;img src="assets/floods.png" width="100%"/&gt;
+]
+
+---
+
+# Some of our own efforts...
+
+.center[
+&lt;img src="assets/isotype.png" width="100%"/&gt;
+]
+
+---
+# Principles
+
+--
+
+&gt; ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+
+--
+
+- Relies on 'tidy data' - which we now have!
+
+--
+
+- Each column (variable) of data in your dataset can be 'mapped' to an `aesthetic` on the chart
+
+--
+
+- Aesthetics can include:
+ * X-axis
+ * Y-axis
+ * Colour
+ * Fill
+ * Alpha (opacity)
+ * Groups
+ * Loads more!
+
+---
+
+# Quick example
+
+ggplot2 comes with some example datasets - one being `mpg` fuel economy data
+
+
+```r
+library(ggplot2)
+
+head(mpg)
+```
+
+```
+## # A tibble: 6 x 11
+##   manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
+##   &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
+## 1 audi         a4     1.80  1999     4 auto~ f        18    29 p     comp~
+## 2 audi         a4     1.80  1999     4 manu~ f        21    29 p     comp~
+## 3 audi         a4     2.00  2008     4 manu~ f        20    31 p     comp~
+## 4 audi         a4     2.00  2008     4 auto~ f        21    30 p     comp~
+## 5 audi         a4     2.80  1999     6 auto~ f        16    26 p     comp~
+## 6 audi         a4     2.80  1999     6 manu~ f        18    26 p     comp~
+```
+
+We want to look at the relationship between `displ` (engine displacement in litres) and `hwy` (highway miles per gallon), whilst also differentiating between the `class` of each vehicle.
+
+How would we do it?
+
+---
+# Quick example
+
+.left-column[
+### Data
+
+
+```r
+* ggplot(data = mpg)
+```
+
+]
+
+.right-column[
+![](index_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+]
+
+---
+# Quick example
+
+.left-column[
+### Data
+### X + Y Aesthetics
+
+
+```r
+ggplot(data = mpg,
+*      aes(x = displ,
+*          y = hwy))
+```
+
+]
+
+.right-column[
+![](index_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]
+
+---
+# Quick example
+
+.left-column[
+### Data
+### X + Y Aesthetics
+### Geoms
+
+
+```r
+ggplot(data = mpg,
+       aes(x = displ,
+           y = hwy)) +
+* geom_point()
+```
+
+]
+
+.right-column[
+![](index_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+]
+
+---
+# Quick example
+
+.left-column[
+### Data
+### X + Y Aesthetics
+### Geoms
+### Colour Aesthetic
+
+
+```r
+ggplot(data = mpg,
+       aes(x = displ,
+           y = hwy)) + 
+* geom_point(aes(colour = class))
+```
+
+]
+
+.right-column[
+![](index_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+
+---
+# Quick example
+
+.left-column[
+### Data
+### X + Y Aesthetics
+### Geoms
+### Colour Aesthetic
+### Trend Line Geom
+
+
+```r
+ggplot(data = mpg,
+       aes(x = displ,
+           y = hwy)) + 
+  geom_point(aes(colour = class)) +
+* geom_smooth()
+```
+
+]
+
+.right-column[
+![](index_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# ggplot2 Components
+
+.left-column[
+## `ggplot()`
+]
+
+.right-column[
+- Any data or aesthetics declared in the opening `ggplot()` function will be mapped to any following `geom_*` unless overriden within the `geom_*()` function
+]
+
+---
+
+# ggplot2 Components
+
+.left-column[
+## `ggplot()`
+## `geom_*()`
+]
+
+.right-column[
+- Any data or aesthetics declared in the opening `ggplot()` function will be mapped to any following `geom_*` unless overriden within the `geom_*()` function
+
+- You can map different data and aesthetics to specific geoms by declaring them inside the `geom_*()` function like so: 
+
+
+```r
+geom_point(data = different_dataset, 
+           aes(x = xVar, 
+               y = yVar, 
+               colour = colourVar))
+```
+]
+
+---
+
+# ggplot2 Components
+
+.left-column[
+## `ggplot()`
+## `geom_*()`
+## + not %&gt;% !!!
+]
+
+.right-column[
+- Any data or aesthetics declared in the opening `ggplot()` function will be mapped to any following `geom_*` unless overriden within the `geom_*()` function
+
+- You can map different data and aesthetics to specific geoms by declaring them inside the `geom_*()` function like so: 
+
+
+```r
+geom_point(data = different_dataset, 
+           aes(x = xVar, 
+               y = yVar, 
+               colour = colourVar))
+```
+
+- Note that to layer elements in a ggplot, we use the `+` operator and not the pipe `%&gt;%`!
+
+]
+
+---
+class: inverse, middle, center
+
+# Your Turn!
+
+Let's build some charts with the tidy dataset we made earlier...
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
